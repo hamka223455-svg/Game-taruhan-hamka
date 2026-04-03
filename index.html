@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tim Saya vs Regu A/B - Arena Bola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+            background: linear-gradient(45deg, #ffd700, #ffed4a, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .warning {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            border: 2px solid #ff4444;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(255,68,68,0.5); }
+            to { box-shadow: 0 0 20px rgba(255,68,68,0.8); }
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .arena-container {
+            background: rgba(0,0,0,0.8);
+            border-radius: 20px;
+            padding: 20px;
+            height: 550px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #ffd700;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .arena {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #228B22 0%, #32CD32 50%, #228B22 100%);
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .team-selection {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .team-card {
+            background: rgba(255,255,255,0.15);
+            border: 3px solid transparent;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .team-card:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-5px);
+            border-color: #ffd700;
+        }
+
+        .team-card.selected {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.3);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.4);
+        }
+
+        .team-name {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .my-team {
+            background: linear-gradient(45deg, #00ff88, #32ff7e);
+            color: #000;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.3em;
+            box-shadow: 0 10px 30px rgba(0,255,136,0.3);
+        }
+
+        .balance-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            height: fit-content;
+        }
+
+        .balance {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .bet-section {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+
+        .bet-input {
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            width: 220px;
+            margin: 10px;
+            text-align: center;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+
+        .bet-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .bet-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(255,107,107,0.4);
+        }
+
+        .bet-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .match-info {
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        /* ARENA ELEMENTS */
+        .player {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .player-my { 
+            background: linear-gradient(45deg, #00ff88, #32ff7e); 
+            color: #000;
+            border: 3px solid #fff;
+            width: 50px;
+            height: 50px;
+            font-size: 16px;
+        }
+
+        .playerA { background: linear-gradient(45deg, #ff4444, #ff6666); color: white; }
+        .playerB { background: linear-gradient(45deg, #4169E1, #6495ED); color: white; }
+
+        .ball {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle, #fff 40%, #ffd700 70%, #ff8c00 100%);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+        }
+
+        .goal-my, .goal-opponent {
+            position: absolute;
+            top: 50%;
+            width: 65px;
+            height: 130px;
+            border: 5px solid #ffd700;
+            transform: translateY(-50%);
+        }
+
+        .goal-my { left: 8px; }
+        .goal-opponent { right: 8px; }
+
+        .score {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.8em;
+            font-weight: bold;
+            background: rgba(0,0,0,0.8);
+            padding: 15px 35px;
+            border-radius: 25px;
+            z-index: 10;
+            border: 2px solid #ffd700;
+        }
+
+        .game-status {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        /* HISTORY SECTION */
+        .history-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            height: 500px;
+            overflow-y: auto;
+        }
+
+        .history-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        .history-item {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border-left: 4px solid #ffd700;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(255,215,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .history-item.win {
+            border-left-color: #00ff88;
+            background: rgba(0,255,136,0.1);
+        }
+
+        .history-item.lose {
+            border-left-color: #ff4444;
+            background: rgba(255,68,68,0.1);
+        }
+
+        .history-match {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .history-result {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .history-bonus {
+            color: #00ff88;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .arena-container {
+                height: 450px;
+            }
+            .history-section {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚽ TIM SAYA vs REGU A/B ⚽</h1>
+            <div class="warning">
+                Buatan Hamka dan ini edukasi buka taruhan asli!!
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="arena-container">
+                <div class="arena" id="arena">
+                    <div class="goal-my"></div>
+                    <div class="goal-opponent"></div>
+                    <div class="score" id="score">0 - 0</div>
+                    <div class="game-status" id="gameStatus">Pilih Lawan & Taruhan</div>
+                    
+                    <div class="player player-my" id="playerMy" style="display: none;">
+                        <span>ME</span>
+                    </div>
+                    <div class="player playerA" id="playerA" style="display: none;">
+                        <span>A</span>
+                    </div>
+                    <div class="player playerB" id="playerB" style="display: none;">
+                        <span>B</span>
+                    </div>
+                    <div class="ball" id="ball" style="display: none;"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="my-team">
+                    🏆 **TIM SAYA** (Kamu) 🏆
+                </div>
+
+                <div class="balance-section">
+                    <div class="balance" id="balance">Rp 1.000.000</div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-number" id="wins">0</div>
+                            Menang
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="loses">0</div>
+                            Kalah
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="streak">0</div>
+                            Streak
+                        </div>
+                    </div>
+
+                    <div class="team-selection">
+                        <div class="team-card" id="teamA">
+                            <div class="team-name">⚔️ LAWAN Regu A</div>
+                            <div>Persib Bandung</div>
+                        </div>
+                        <div class="team-card" id="teamB">
+                            <div class="team-name">⚔️ LAWAN Regu B</div>
+                            <div>Persija Jakarta</div>
+                        </div>
+                    </div>
+
+                    <div class="bet-section">
+                        <input type="number" class="bet-input" id="betAmount" placeholder="Taruhan (Rp)" min="10000" max="500000">
+                        <div id="selectedTeam" style="margin: 10px 0; font-size: 1.1em;"></div>
+                        <button class="bet-btn" id="betBtn" disabled>🚀 TIM SAYA vs LAWAN!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">📜 HISTORY PERTARUNGAN</div>
+            <div id="historyList">Belum ada pertarungan...</div>
+        </div>
+    </div>
+
+    <script>
+        class FootballArena {
+            constructor() {
+                this.balance = 1000000;
+                this.wins = 0;
+                this.loses = 0;
+                this.streak = 0;
+                this.maxStreak = 0;
+                this.selectedOpponent = null;
+                this.betAmount = 0;
+                this.gameActive = false;
+                this.scoreMy = 0;
+                this.scoreOpponent = 0;
+                this.gameTimer = null;
+                this.history = [];
+
+                this.init();
+            }
+
+            init() {
+                this.updateUI();
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                document.getElementById('teamA').addEventListener('click', () => this.selectOpponent('A'));
+                document.getElementById('teamB').addEventListener('click', () => this.selectOpponent('B'));
+                document.getElementById('betBtn').addEventListener('click', () => this.startMatch());
+                
+                document.getElementById('betAmount').addEventListener('input', (e) => {
+                    const amount = parseInt(e.target.value);
+                    const btn = document.getElementById('betBtn');
+                    if (this.selectedOpponent && amount && amount <= this.balance && amount >= 10000) {
+                        btn.disabled = false;
+                    } else {
+                        btn.disabled = true;
+                    }
+                });
+            }
+
+            selectOpponent(opponent) {
+                this.selectedOpponent = opponent;
+                document.querySelectorAll('.team-card').forEach(card => card.classList.remove('selected'));
+                document.getElementById(`team${opponent}`).classList.add('selected');
+                document.getElementById('selectedTeam').innerHTML = `⚔️ <strong>TIM SAYA vs Regu ${opponent}</strong>`;
+            }
+
+            startMatch() {
+                this.betAmount = parseInt(document.getElementById('betAmount').value);
+                if (this.betAmount > this.balance) {
+                    alert('Saldo tidak cukup!');
+                    return;
+                }
+
+                this.balance -= this.betAmount;
+                this.gameActive = true;
+                this.scoreMy = 0;
+                this.scoreOpponent = 0;
+                
+                document.getElementById('betBtn').disabled = true;
+                document.getElementById('betAmount').disabled = true;
+                document.getElementById('selectedTeam').innerHTML = '⚽ PERTARUNGAN DIMULAI! TIM SAYA vs Regu ' + this.selectedOpponent;
+
+                this.setupPlayers();
+                this.startGameLoop();
+            }
+
+            setupPlayers() {
+                const playerMy = document.getElementById('playerMy');
+                const playerOpponent = document.getElementById(`player${this.selectedOpponent}`);
+                const ball = document.getElementById('ball');
+
+                playerMy.style.display = 'flex';
+                playerOpponent.style.display = 'flex';
+                ball.style.display = 'block';
+
+                // Reset posisi: TIM SAYA (kiri) vs LAWAN (kanan)
+                playerMy.style.left = '15%';
+                playerMy.style.top = '50%';
+                playerOpponent.style.left = '75%';
+                playerOpponent.style.top = '50%';
+                ball.style.left = '45%';
+                ball.style.top = '50%';
+            }
+
+            startGameLoop() {
+                let gameTime = 0;
+                this.gameTimer = setInterval(() => {
+                    gameTime += 150;
+                    this.updateGame(gameTime);
+                    
+                                        if (gameTime > 12000) { // 12 detik pertandingan
+                        this.endMatch();
+                    }
+                }, 200);
+            }
+
+            updateGame(gameTime) {
+                const playerMy = document.getElementById('playerMy');
+                const playerOpponent = document.getElementById(`player${this.selectedOpponent}`);
+                const ball = document.getElementById('ball');
+
+                // Gerakan dinamis TIM SAYA (hijau) vs LAWAN
+                const moveMy = Math.sin(gameTime * 0.012) * 25;
+                const moveOpp = Math.cos(gameTime * 0.01) * 25;
+                
+                playerMy.style.transform = `translateY(${moveMy}px)`;
+                playerOpponent.style.transform = `translateY(${moveOpp}px)`;
+
+                // Bola bergerak lebih agresif
+                const ballMoveX = Math.sin(gameTime * 0.018) * 35;
+                const ballMoveY = Math.cos(gameTime * 0.022) * 20;
+                
+                ball.style.left = `calc(45% + ${ballMoveX}px)`;
+                ball.style.top = `calc(50% + ${ballMoveY}px)`;
+
+                // Chance gol lebih realistis
+                if (Math.random() < 0.025) {
+                    this.randomGoal();
+                }
+
+                this.updateScore();
+            }
+
+            randomGoal() {
+                // 55% chance TIM SAYA gol, 45% lawan (karena kamu tim utama)
+                if (Math.random() < 0.55) {
+                    this.scoreMy++;
+                } else {
+                    this.scoreOpponent++;
+                }
+            }
+
+            updateScore() {
+                document.getElementById('score').textContent = `${this.scoreMy} - ${this.scoreOpponent}`;
+                document.getElementById('gameStatus').textContent = '⚽ Pertandingan SENGIT!';
+            }
+
+            endMatch() {
+                clearInterval(this.gameTimer);
+                this.gameActive = false;
+
+                let resultText, isWin, multiplier = 0, winnings = 0;
+                
+                if (this.scoreMy > this.scoreOpponent) {
+                    isWin = true;
+                    this.wins++;
+                    this.streak++;
+                    this.maxStreak = Math.max(this.maxStreak, this.streak);
+                    
+                    multiplier = Math.floor(Math.random() * 99) + 2;
+                    winnings = this.betAmount * multiplier;
+                    this.balance += winnings;
+                    
+                    resultText = `🏆 TIM SAYA MENANG ${this.scoreMy}-${this.scoreOpponent}! x${multiplier}`;
+                    
+                    if (this.streak === 5) {
+                        this.balance += 1000000;
+                        resultText += ' <span class="history-bonus">🎉 +BONUS 1jt!</span>';
+                    }
+                } else {
+                    isWin = false;
+                    this.loses++;
+                    this.streak = 0;
+                    resultText = `💥 TIM SAYA KALAH ${this.scoreMy}-${this.scoreOpponent}`;
+                }
+
+                // TAMBAH KE HISTORY
+                this.addToHistory(isWin, resultText, winnings);
+
+                document.getElementById('gameStatus').innerHTML = resultText;
+                document.getElementById('selectedTeam').innerHTML = `Hasil: ${resultText}`;
+                
+                document.getElementById('betBtn').disabled = false;
+                document.getElementById('betAmount').disabled = false;
+                document.getElementById('betAmount').value = '';
+
+                this.updateUI();
+                this.resetArena();
+            }
+
+            addToHistory(isWin, resultText, winnings) {
+                const historyItem = {
+                    id: Date.now(),
+                    opponent: this.selectedOpponent,
+                    bet: this.betAmount,
+                    scoreMy: this.scoreMy,
+                    scoreOpp: this.scoreOpponent,
+                    isWin: isWin,
+                    multiplier: winnings > 0 ? (winnings / this.betAmount).toFixed(1) : 0,
+                    winnings: winnings,
+                    date: new Date().toLocaleTimeString('id-ID')
+                };
+
+                this.history.unshift(historyItem);
+                if (this.history.length > 10) this.history.pop(); // Max 10 history
+
+                this.renderHistory();
+            }
+
+            renderHistory() {
+                const historyList = document.getElementById('historyList');
+                if (this.history.length === 0) {
+                    historyList.innerHTML = '<div style="text-align:center; opacity:0.7;">Belum ada pertarungan...</div>';
+                    return;
+                }
+
+                historyList.innerHTML = this.history.map(item => `
+                    <div class="history-item ${item.isWin ? 'win' : 'lose'}">
+                        <div class="history-match">
+                            TIM SAYA vs Regu ${item.opponent} 
+                            <span style="float:right; color:#ffd700;">${item.scoreMy}-${item.scoreOpp}</span>
+                        </div>
+                        <div style="color:#aaa; font-size:0.9em;">
+                            Taruhan: Rp ${item.bet.toLocaleString()} | 
+                            ${item.isWin ? `Menang x${item.multiplier}` : 'Kalah'}
+                        </div>
+                        ${item.isWin && item.winnings > 0 ? 
+                            `<div class="history-result">+Rp ${item.winnings.toLocaleString()}</div>` : 
+                            `<div class="history-result">-Rp ${item.bet.toLocaleString()}</div>`
+                        }
+                        <div style="font-size:0.8em; opacity:0.7;">${item.date}</div>
+                    </div>
+                `).join('');
+            }
+
+            resetArena() {
+                setTimeout(() => {
+                    document.getElementById('playerMy').style.display = 'none';
+                    document.getElementById('playerA').style.display = 'none';
+                    document.getElementById('playerB').style.display = 'none';
+                    document.getElementById('ball').style.display = 'none';
+                    document.getElementById('score').textContent = '0 - 0';
+                    document.getElementById('gameStatus').textContent = 'Pilih Lawan Baru!';
+                    document.querySelectorAll('.team-card').forEach(card => card.classList.remove('selected'));
+                    document.getElementById('selectedTeam').textContent = '';
+                    this.selectedOpponent = null;
+                }, 5000);
+            }
+
+            updateUI() {
+                document.getElementById('balance').textContent = `Rp ${this.balance.toLocaleString()}`;
+                document.getElementById('wins').textContent = this.wins;
+                document.getElementById('loses').textContent = this.loses;
+                document.getElementById('streak').textContent = this.streak;
+            }
+        }
+
+        // MULAI ARENA
+        const arena = new FootballArena();
+    </script>
+</body>
+</html>
